@@ -73,3 +73,11 @@ Start the Django web server by running:
 ```sh
 python manage.py runserver
 ```
+
+## Tests
+
+In command prompt, run:
+
+```sh
+pytest
+```
