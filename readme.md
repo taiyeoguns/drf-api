@@ -26,6 +26,24 @@ With a [virtualenv](https://virtualenv.pypa.io/) already set-up, install the req
 pip install -r requirements.txt
 ```
 
+### Add details in `.env` file
+
+Create `.env` file from example file and maintain necessary details in it e.g. secret key etc
+
+```sh
+cp .env.example .env
+```
+
+### Generate secret key
+
+Generate a secret key to be used by the Django application using the command below:
+
+```sh
+python -c "import string,secrets; uni=string.ascii_letters+string.digits+string.punctuation; print(repr(''.join([secrets.choice(uni) for i in range(48)])))"
+```
+
+Copy the generated string and add to the `.env` file created in previous step.
+
 ### Run migrations
 
 Create tables in the database:
