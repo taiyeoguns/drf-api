@@ -1,6 +1,8 @@
 from django.core.management.base import BaseCommand
 from base.models import Department, Employee
 from mixer.backend.django import mixer
+from secrets import choice
+from django.utils import timezone
 
 
 class Command(BaseCommand):
@@ -13,6 +15,11 @@ class Command(BaseCommand):
         dob = mixer.faker.date()
 
         return {"fname": fname, "lname": lname, "email": email, "dob": dob}
+
+    def _get_department(self):
+        depts = ("Accounts", "Staffing", "Marketing", "Design", "Development", "Testing")
+
+        return f"{mixer.faker.word()} {choice(depts)}".title()
 
     def _clear(self):
         self.stdout.write("Clearing data")
@@ -43,7 +50,13 @@ class Command(BaseCommand):
         for i in range(options["num"]):
 
             if i < round(0.4 * options["num"]) - 1:
-                mixer.blend(Department, name=mixer.faker.word().capitalize())
+                mixer.blend(
+                    Department,
+                    name=self._get_department(),
+                    created_at=mixer.faker.date_time_between(
+                        start_date="-1w", tzinfo=timezone.get_current_timezone()
+                    ),
+                )
 
         # seed shifts
         self.stdout.write("Seeding Employees")
@@ -60,6 +73,9 @@ class Command(BaseCommand):
                 email=_user.get("email"),
                 dob=_user.get("dob"),
                 department=mixer.SELECT,
+                created_at=mixer.faker.date_time_between(
+                    start_date="-1w", tzinfo=timezone.get_current_timezone()
+                ),
             )
 
         self.stdout.write("Done.")

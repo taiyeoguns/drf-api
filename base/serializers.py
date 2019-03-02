@@ -1,16 +1,25 @@
-from rest_framework.serializers import ModelSerializer
+from rest_framework.serializers import HyperlinkedModelSerializer
 from base.models import Employee, Department
 
 
-class DepartmentSerializer(ModelSerializer):
+class DepartmentSerializer(HyperlinkedModelSerializer):
     class Meta:
         model = Department
-        fields = ("id", "name")
+        fields = ("id", "url", "name", "created_at")
 
 
-class EmployeeSerializer(ModelSerializer):
+class EmployeeSerializer(HyperlinkedModelSerializer):
     department = DepartmentSerializer()
 
     class Meta:
         model = Employee
-        fields = ("id", "first_name", "last_name", "email", "date_of_birth", "department")
+        fields = (
+            "id",
+            "url",
+            "first_name",
+            "last_name",
+            "email",
+            "date_of_birth",
+            "department",
+            "created_at",
+        )
