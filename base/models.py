@@ -1,8 +1,10 @@
 from django.db import models
 from django.utils import timezone
+import uuid
 
 
 class Department(models.Model):
+    uuid = models.UUIDField(default=uuid.uuid4)
     name = models.CharField(max_length=50)
     created_at = models.DateTimeField(default=timezone.now)
 
@@ -11,6 +13,7 @@ class Department(models.Model):
 
 
 class Employee(models.Model):
+    uuid = models.UUIDField(default=uuid.uuid4)
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
     email = models.CharField(max_length=50)
