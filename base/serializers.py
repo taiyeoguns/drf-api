@@ -37,7 +37,10 @@ class EmployeeSerializer(HyperlinkedModelSerializer):
 
     def update(self, instance, validated_data):
 
-        department_data = validated_data.pop("department")
+        if "department" in validated_data:
+            dept_data = validated_data.pop("department")
+            instance.department.name = dept_data.get("name", instance.department.name)
+            instance.department.save()
 
         instance.first_name = validated_data.get("first_name", instance.first_name)
         instance.last_name = validated_data.get("last_name", instance.last_name)
@@ -47,9 +50,5 @@ class EmployeeSerializer(HyperlinkedModelSerializer):
         )
 
         instance.save()
-
-        instance.department.name = department_data.get("name", instance.department.name)
-
-        instance.department.save()
 
         return instance
