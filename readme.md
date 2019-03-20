@@ -74,6 +74,12 @@ Start the Django web server by running:
 python manage.py runserver
 ```
 
+Open a browser and navigate to `http://localhost:8000/api`
+
+## Documentation
+
+Documentation using OpenAPI is available at `http://localhost:8000/api/docs`
+
 ## Tests
 
 In command prompt, run:

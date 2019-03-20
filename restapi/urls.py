@@ -16,9 +16,17 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.views.generic import RedirectView
+from rest_framework_swagger.views import get_swagger_view
+
+api_path = path("api/", include("base.urls"))
+
+doc_url_patterns = [api_path]
+
+schema_view = get_swagger_view(title="DRF API", patterns=doc_url_patterns)
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("", RedirectView.as_view(url="/api"), name="index"),
-    path("api/", include("base.urls")),
+    path("api/docs/", schema_view, name="docs"),
+    api_path,
 ]
