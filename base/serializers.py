@@ -32,8 +32,7 @@ class EmployeeSerializer(HyperlinkedModelSerializer):
     def create(self, validated_data):
         dept_data = validated_data.pop("department")
         department = Department.objects.create(**dept_data)
-        employee = Employee.objects.create(department=department, **validated_data)
-        return employee
+        return Employee.objects.create(department=department, **validated_data)
 
     def update(self, instance, validated_data):
 
