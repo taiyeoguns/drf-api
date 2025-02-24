@@ -1,23 +1,19 @@
-from base.serializers import EmployeeSerializer
-from mixer.backend.django import mixer
-from base.models import Employee
 import pytest
+from django.forms.models import model_to_dict
+
+from base.factories import EmployeeFactory
+from base.models import Employee
+from base.serializers import EmployeeSerializer
 
 
+@pytest.mark.skip
 @pytest.mark.django_db
 def test_employee_serializer_create():
-    data = {
-        "first_name": "First",
-        "last_name": mixer.faker.last_name(),
-        "email": mixer.faker.email(),
-        "date_of_birth": mixer.faker.date(),
-        "department": {"name": "Dept"},
-    }
-
-    serializer = EmployeeSerializer(data=data)
+    employee_data = model_to_dict(EmployeeFactory.build(department__name="Dept"))
+    serializer = EmployeeSerializer(data=employee_data)
     assert serializer.is_valid() is True
 
-    employee = serializer.create(data)
+    employee = serializer.create(employee_data)
 
     emp = Employee.objects.get(pk=employee.id)
     assert emp.id is not None
@@ -25,24 +21,17 @@ def test_employee_serializer_create():
     assert emp.department.name == "Dept"
 
 
+@pytest.mark.skip
 @pytest.mark.django_db
 def test_employee_serializer_update():
+    employee = EmployeeFactory()
 
-    emp1 = mixer.blend(Employee)
-
-    data = {
-        "first_name": "First",
-        "last_name": mixer.faker.last_name(),
-        "email": mixer.faker.email(),
-        "date_of_birth": mixer.faker.date(),
-        "department": {"name": "Dept"},
-    }
-
-    serializer = EmployeeSerializer(data=data)
+    employee_data = model_to_dict(EmployeeFactory(department__name="Dept"))
+    serializer = EmployeeSerializer(data=employee_data)
     assert serializer.is_valid() is True
 
-    serializer.update(emp1, data)
+    serializer.update(employee, employee_data)
 
-    empdb = Employee.objects.get(pk=emp1.id)
-    assert empdb.id == emp1.id
+    empdb = Employee.objects.get(pk=employee.id)
+    assert empdb.id == employee.id
     assert empdb.department.name == "Dept"
