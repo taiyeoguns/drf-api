@@ -1,0 +1,53 @@
+services:
+  db_service:
+    container_name: db_container
+    env_file:
+      - .env
+    image: postgres:16.4
+    restart: always
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    ports:
+      - "${POSTGRES_PORT}:${POSTGRES_PORT}"
+    command: -p ${POSTGRES_PORT}
+    expose:
+      - "${POSTGRES_PORT}"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -p ${POSTGRES_PORT}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  nginx_service:
+    container_name: nginx_container
+    build: ./nginx
+    ports:
+      - 8000:80
+    volumes:
+      - static_data:/usr/src/app/staticfiles
+    depends_on:
+      - web_service
+
+  web_service:
+    container_name: web_container
+    env_file:
+      - .env
+    restart: always
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    expose:
+      - "8000"
+    depends_on:
+      db_service:
+        condition: service_healthy
+    volumes:
+      - static_data:/usr/src/app/staticfiles
+    environment:
+      - POSTGRES_HOST=db_container
+    stdin_open: true
+    tty: true
+
+volumes:
+  db_data:
+  static_data:

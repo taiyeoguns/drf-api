@@ -1,0 +1,7 @@
+-r requirements.txt
+mypy==1.13.0
+pdbpp==0.10.3
+pre-commit==4.0.1
+rich==13.9.4
+ruff==0.7.2
+wemake-python-styleguide==0.19.2
