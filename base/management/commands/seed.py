@@ -2,6 +2,7 @@ from django.core.management.base import BaseCommand
 
 from base.factories import DepartmentFactory, EmployeeFactory
 from base.models import Department, Employee
+import factory
 
 
 class Command(BaseCommand):
@@ -28,10 +29,14 @@ class Command(BaseCommand):
         num_items = max(num_items, 5)
         num_items = min(num_items, 100)
 
-        self.stdout.write("Seeding Departments")
-        DepartmentFactory.create_batch(num_items)
+        num_departments = max(1, int(num_items * 0.2))  # Ensure at least 1 department
 
-        self.stdout.write("Seeding Employees")
-        EmployeeFactory.create_batch(num_items)
+        departments = DepartmentFactory.create_batch(num_departments)
+        self.stdout.write(f"Seeded {num_departments} Departments")
+
+        EmployeeFactory.create_batch(
+            num_items, department=factory.Iterator(departments)
+        )
+        self.stdout.write(f"Seeded {num_items} Employees")
 
         self.stdout.write("Done.")
