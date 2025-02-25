@@ -3,7 +3,8 @@ FROM python:3.12-slim-bookworm
 ARG APP_DIR=/usr/src/app
 
 RUN apt-get update -y \
-    && apt-get install libpq-dev gcc -y
+    && apt-get install --no-install-recommends libpq-dev gcc -y \
+    && rm -rf /var/lib/apt/lists/*
 
 # Create application directories and user
 RUN mkdir -p ${APP_DIR} && \
@@ -16,7 +17,7 @@ WORKDIR ${APP_DIR}
 
 # Install requirements
 COPY requirements.txt ${APP_DIR}
-RUN pip install --upgrade pip && pip install -r requirements.txt
+RUN pip install --upgrade pip && pip install --no-cache-dir -r requirements.txt
 
 RUN chown -R appusr:appusr ${APP_DIR}
 USER appusr
