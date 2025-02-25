@@ -1,10 +1,17 @@
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import ModelViewSet
-from base.models import Employee, Department
-from base.serializers import EmployeeSerializer, DepartmentSerializer
-from base.filtersets import EmployeeFilterSet, DepartmentFilterSet
+
+from base.filtersets import DepartmentFilterSet, EmployeeFilterSet
+from base.models import Department, Employee
+from base.serializers import DepartmentSerializer, EmployeeSerializer
 
 
-class EmployeeViewSet(ModelViewSet):
+class BaseViewSet(ModelViewSet):
+    lookup_field = "uuid"
+    permission_classes = [IsAuthenticated]
+
+
+class EmployeeViewSet(BaseViewSet):
     """
     This endpoint presents employees which details such as first name, last name etc.
 
@@ -32,10 +39,9 @@ class EmployeeViewSet(ModelViewSet):
     queryset = Employee.objects.all()
     serializer_class = EmployeeSerializer
     filterset_class = EmployeeFilterSet
-    lookup_field = "uuid"
 
 
-class DepartmentViewSet(ModelViewSet):
+class DepartmentViewSet(BaseViewSet):
     """
     This endpoint presents departments.
 
@@ -57,9 +63,9 @@ class DepartmentViewSet(ModelViewSet):
     update:
         Update an department
     """
+
     serializer_class = DepartmentSerializer
     filterset_class = DepartmentFilterSet
-    lookup_field = "uuid"
 
     def get_queryset(self):
         return Department.objects.order_by("-created_at")

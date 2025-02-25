@@ -34,6 +34,10 @@ Create `.env` file from example file and maintain necessary details in it e.g. s
 cp .env.example .env
 ```
 
+For deployment to other environments, ensure to maintain the host details in the `.env` file in the `ALLOWED_HOSTS` variable. Similar for `CSRF_TRUSTED_ORIGINS`.
+
+Also set `DEBUG=False` for environments other than development.
+
 ### Generate secret key
 
 Generate a secret key to be used by the Django application using the command below:
@@ -87,3 +91,24 @@ In command prompt, run:
 ```sh
 pytest
 ```
+
+### Authentication
+
+To authenticate with the API, appropriate user API token should be passed in the `X-API-KEY` HTTP header, e.g.
+
+```sh
+X-API-KEY: 00000000-0000-0000-0000-000000000000
+```
+
+In development, if seeding was done, an API token `00000000-0000-0000-0000-000000000000` should exist for use.
+
+Example request:
+
+```sh
+curl -X 'GET' \
+  'http://localhost:8000/api/employees/' \
+  -H 'accept: application/json' \
+  -H 'X-API-KEY: 00000000-0000-0000-0000-000000000000'
+```
+
+In the OpenAPI (Swagger) documentation page, to authenticate, click on the `Authorize` button before any requests and paste in the token to apply it for all requests needing authentication.

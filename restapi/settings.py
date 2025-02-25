@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     "base",
     "django_filters",
     "drf_spectacular",
+    "rest_framework.authtoken",
 ]
 
 MIDDLEWARE = [
@@ -120,8 +121,12 @@ USE_TZ = True
 STATIC_URL = "/static/"
 
 REST_FRAMEWORK = {
-    "DEFAULT_FILTER_BACKENDS": ("django_filters.rest_framework.DjangoFilterBackend",),
-    "DEFAULT_AUTHENTICATION_CLASSES": [],
+    "DEFAULT_FILTER_BACKENDS": [
+        "django_filters.rest_framework.DjangoFilterBackend",
+    ],
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        "base.authentication.XApiKeyTokenAuthentication",
+    ],
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
 }
 
@@ -138,7 +143,10 @@ SPECTACULAR_SETTINGS = {
 CSP_DEFAULT_SRC = ("'self'", "'unsafe-inline'", "cdn.jsdelivr.net")
 CSP_IMG_SRC = ("'self'", "data:", "cdn.jsdelivr.net")
 
+AUTH_USER_MODEL = "base.User"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 CSRF_TRUSTED_ORIGINS = config("CSRF_TRUSTED_ORIGINS", cast=Csv())
+
+APP_DOMAIN = config("APP_DOMAIN")

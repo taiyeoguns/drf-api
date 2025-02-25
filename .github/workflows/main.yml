@@ -30,11 +30,13 @@ jobs:
       - name: Run Tests
         env:
           SECRET_KEY: "-"
+          DEFAULT_ADMIN_PASSWORD: "-"
           POSTGRES_USER: "-"
           POSTGRES_PASSWORD: "-"
           POSTGRES_HOST: "-"
           POSTGRES_DB: "-"
           ALLOWED_HOSTS: "localhost"
           CSRF_TRUSTED_ORIGINS: "http://localhost:8000"
+          APP_DOMAIN: "drf-api.local"
         run: |
           pytest -vv --junitxml=junit/test-results.xml
