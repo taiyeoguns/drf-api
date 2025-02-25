@@ -30,7 +30,6 @@ jobs:
       - name: Run Tests
         env:
           SECRET_KEY: "-"
-          DEFAULT_ADMIN_PASSWORD: "-"
           POSTGRES_USER: "-"
           POSTGRES_PASSWORD: "-"
           POSTGRES_HOST: "-"
