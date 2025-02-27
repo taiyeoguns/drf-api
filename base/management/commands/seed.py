@@ -1,3 +1,5 @@
+import uuid
+
 import factory
 from decouple import config
 from django.contrib.auth import get_user_model
@@ -35,7 +37,7 @@ class Command(BaseCommand):
             last_name="User",
         )
         token = Token.objects.create(
-            user=admin_user, key="00000000-0000-0000-0000-000000000000"
+            user=admin_user, key=config("DEFAULT_ADMIN_TOKEN", uuid.uuid4().hex)
         )
 
         # set bounds not less than 5 or greater than 100

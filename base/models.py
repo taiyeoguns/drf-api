@@ -13,10 +13,13 @@ class BaseModel(models.Model):
         abstract = True
 
     def __repr__(self):
-        attrs = [
-            f"{field.name}={repr(getattr(self, field.name))}"
-            for field in self._meta.fields
-        ]
+        sensitive_fields = {"password", "secret", "ssn", "token", "auth_token"}
+        attrs = []
+        for field in self._meta.fields:
+            if field.name in sensitive_fields:
+                attrs.append(f"{field.name}=<redacted>")
+            else:
+                attrs.append(f"{field.name}={repr(getattr(self, field.name))}")
 
         return f"{self.__class__.__name__}({', '.join(attrs)})"
 
