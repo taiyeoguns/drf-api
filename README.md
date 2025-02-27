@@ -8,7 +8,8 @@ Built with Python and Django Rest Framework.
 
 - Python 3
 - [Django Rest Framework](https://www.django-rest-framework.org/) 3.9.x
-- [Django](https://www.djangoproject.com/) 2.1.x
+- [Django](https://www.djangoproject.com/) 5.1.x
+- Postgres database
 
 ## Installation
 
@@ -23,7 +24,7 @@ git clone https://github.com/taiyeoguns/drf-api.git
 With a [virtualenv](https://virtualenv.pypa.io/) already set-up, install the requirements with pip:
 
 ```sh
-pip install -r requirements.txt
+make install
 ```
 
 ### Add details in `.env` file
@@ -53,7 +54,7 @@ Copy the generated string and add to the `.env` file created in previous step.
 Create tables in the database:
 
 ```sh
-python manage.py migrate
+make db-migrate
 ```
 
 ### Seed database
@@ -61,7 +62,7 @@ python manage.py migrate
 To populate database with sample data, run:
 
 ```sh
-python manage.py seed
+make seed
 ```
 
 `num` parameter specifies how many items to enter into the tables e.g.
@@ -75,7 +76,7 @@ python manage.py seed --num 15
 Start the Django web server by running:
 
 ```sh
-python manage.py runserver
+make run
 ```
 
 Open a browser and navigate to `http://localhost:8000/api`
@@ -89,7 +90,7 @@ Documentation using OpenAPI is available at `http://localhost:8000/api/docs`
 In command prompt, run:
 
 ```sh
-pytest
+make test
 ```
 
 ### Authentication
@@ -112,3 +113,20 @@ curl -X 'GET' \
 ```
 
 In the OpenAPI (Swagger) documentation page, to authenticate, click on the `Authorize` button before any requests and paste in the token to apply it for all requests needing authentication.
+
+### Run application with Docker
+
+Ensure database details are added to `.env` file from earlier.
+
+The following environment variables should be set in the `.env` file even if they do not 'exist', the docker postgres image will use them for setting up the container -
+`POSTGRES_USER`, `POSTGRES_PASSWORD`, `POSTGRES_DB`
+
+With Docker and Docker Compose set up, run:
+
+```sh
+make docker-run
+```
+
+Wait till setup is complete and all containers are started.
+
+Thereafter, application should be available at `http://localhost:8000`
