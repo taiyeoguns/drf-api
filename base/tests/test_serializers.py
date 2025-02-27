@@ -1,15 +1,15 @@
 import pytest
-from django.forms.models import model_to_dict
 
 from base.factories import EmployeeFactory
 from base.models import Employee
-from base.serializers import EmployeeSerializer
+from base.serializers import EmployeeSerializer, serialize_model_to_dict
 
 
-@pytest.mark.skip
 @pytest.mark.django_db
 def test_employee_serializer_create():
-    employee_data = model_to_dict(EmployeeFactory.build(department__name="Dept"))
+    employee_data = serialize_model_to_dict(
+        EmployeeFactory.build(department__name="Dept")
+    )
     serializer = EmployeeSerializer(data=employee_data)
     assert serializer.is_valid() is True
 
@@ -21,12 +21,11 @@ def test_employee_serializer_create():
     assert emp.department.name == "Dept"
 
 
-@pytest.mark.skip
 @pytest.mark.django_db
 def test_employee_serializer_update():
     employee = EmployeeFactory()
 
-    employee_data = model_to_dict(EmployeeFactory(department__name="Dept"))
+    employee_data = serialize_model_to_dict(EmployeeFactory(department__name="Dept"))
     serializer = EmployeeSerializer(data=employee_data)
     assert serializer.is_valid() is True
 
