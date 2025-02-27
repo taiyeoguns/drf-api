@@ -3,7 +3,7 @@ services:
     container_name: db_container
     env_file:
       - .env
-    image: postgres:16.4
+    image: postgres:17.2
     restart: always
     volumes:
       - db_data:/var/lib/postgresql/data
@@ -25,6 +25,11 @@ services:
       - 8000:80
     volumes:
       - static_data:/usr/src/app/staticfiles
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:80"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     depends_on:
       - web_service
 

@@ -3,7 +3,7 @@ FROM python:3.12-slim-bookworm
 ARG APP_DIR=/usr/src/app
 
 RUN apt-get update -y \
-    && apt-get install --no-install-recommends libpq-dev gcc -y \
+    && apt-get install libpq-dev gcc -y \
     && rm -rf /var/lib/apt/lists/*
 
 # Create application directories and user
@@ -26,4 +26,4 @@ USER appusr
 COPY . ${APP_DIR}
 
 # Run the start script
-CMD ["gunicorn", "-w", "4", "-b", ":8000", "src.wsgi"]
+CMD ["gunicorn", "-w", "4", "-b", ":8000", "restapi.wsgi"]
