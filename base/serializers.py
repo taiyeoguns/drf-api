@@ -1,5 +1,7 @@
+from django.db.models import Model
 from rest_framework.serializers import HyperlinkedModelSerializer, ReadOnlyField
-from base.models import Employee, Department
+
+from base.models import Department, Employee
 
 
 class DepartmentSerializer(HyperlinkedModelSerializer):
@@ -35,7 +37,6 @@ class EmployeeSerializer(HyperlinkedModelSerializer):
         return Employee.objects.create(department=department, **validated_data)
 
     def update(self, instance, validated_data):
-
         if "department" in validated_data:
             dept_data = validated_data.pop("department")
             instance.department.name = dept_data.get("name", instance.department.name)
@@ -51,3 +52,17 @@ class EmployeeSerializer(HyperlinkedModelSerializer):
         instance.save()
 
         return instance
+
+
+# https://blog.okello.io/tutorials/recursively-convert-django-model-to-dict/
+def serialize_model_to_dict(model: Model, fields: dict = None) -> dict:
+    if not fields:
+        fields = {
+            field.name: getattr(model, field.name) for field in model._meta.fields
+        }
+    for field_name, field_value in fields.items():
+        if not isinstance(field_value, Model):
+            # skip non-relational (ForeignKey) fields
+            continue
+        fields[field_name] = serialize_model_to_dict(field_value)
+    return fields
